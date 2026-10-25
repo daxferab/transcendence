@@ -1,0 +1,27 @@
+services:
+
+  nginx:
+    container_name: nginx
+    build: frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - web:/usr/share/nginx/html
+ 
+  postgresql:
+    container_name: postgresql
+    build: backend
+    ports:
+      - "5432:5432"
+
+volumes:
+  web:
+    driver: local
+    driver_opts:
+      device: $PWD/srcs/frontend/srcs
+      o: bind
+      type: none
+
+networks:
+  network:
+    driver: bridge

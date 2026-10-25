@@ -1,12 +1,18 @@
-NGNX-IMAGE = nginx-image
-NGNX-CONTAINER = nginx-container
-NGNX-DOCKERFILE = srcs/frontend/Dockerfile
+COMPOSE_PATH := srcs/docker-compose.yml
 
 all:
-	docker build -f $(NGNX-DOCKERFILE) -t $(NGNX-IMAGE) .
-	docker run -d --name $(NGNX-CONTAINER) -p 8080:80 -v $(shell pwd)/srcs/frontend/srcs:/usr/share/nginx/html $(NGNX-IMAGE)
+	docker compose -f $(COMPOSE_PATH) up --build -d
+
+up:
+	docker compose -f $(COMPOSE_PATH) up -d
+
+down:
+	docker compose -f $(COMPOSE_PATH) down
 
 clean:
-	docker container stop $(NGNX-CONTAINER)
-	docker container remove $(NGNX-CONTAINER)
-	docker image rm $(NGNX-IMAGE)
+	-docker stop $$(docker ps -qa);
+	-docker rm $$(docker ps -qa);
+	-docker rmi -f $$(docker images -qa);
+	-docker volume rm $$(docker volume ls -q);
+	-docker network rm $$(docker network ls -q) 2> /dev/null
+	-docker system prune -af
