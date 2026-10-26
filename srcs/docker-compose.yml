@@ -8,8 +8,8 @@ services:
     volumes:
       - web:/usr/share/nginx/html
  
-  postgresql:
-    container_name: postgresql
+  postgres:
+    container_name: postgres
     build: backend
     ports:
       - "5432:5432"
