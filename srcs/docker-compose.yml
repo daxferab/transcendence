@@ -1,27 +1,56 @@
+#---------------------------------- SERVICES -----------------------------------
 services:
-
+# -------------------------------- NGINX
   nginx:
     container_name: nginx
-    build: frontend
+    build: nginx
     ports:
       - "443:443"
     volumes:
       - web:/usr/share/nginx/html
- 
-  postgres:
+    networks:
+      - network
+
+# -------------------------------- DATABASE (PostreSQL)
+
+  db:
     container_name: postgres
-    build: backend
-    ports:
-      - "5432:5432"
+    build: db
     env_file: .env
+    networks:
+      - network
+
+# -------------------------------- BACKEND
+
+  # api:
+  #   container_name: backend
+  #   build: api
+  #   networks:
+  #     - network
+
+# -------------------------------- ADMINER (Manage the DB)
+
+  adminer:
+    container_name: adminer
+    build: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - network
+
+#----------------------------------- VOLUMES -----------------------------------
 
 volumes:
   web:
     driver: local
     driver_opts:
-      device: $PWD/srcs/frontend/srcs
+      device: $PWD/srcs/nginx/srcs
       o: bind
       type: none
+  pgdata:
+
+
+#---------------------------------- NETWORKS -----------------------------------
 
 networks:
   network:
