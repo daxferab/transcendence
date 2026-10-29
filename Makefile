@@ -41,6 +41,10 @@ clean:
 	-docker network rm $$(docker network ls -q) 2> /dev/null
 	-docker system prune -af
 
+.PHONY: r re
+r: re
+re: clean all
+
 .PHONY: bn bash_nginx
 bn: bash_nginx
 bash_nginx:
@@ -59,7 +63,12 @@ logs_nginx:
 .PHONY: lp logs_postgres
 lp: logs_postgres
 logs_postgres:
-	docker compose -f $(COMPOSE_PATH) logs postgres
+	docker compose -f $(COMPOSE_PATH) logs db
+
+.PHONY: lb logs_backend
+lb: logs_backend
+logs_backend:
+	docker compose -f $(COMPOSE_PATH) logs api
 
 .PHONY: ps
 ps:
