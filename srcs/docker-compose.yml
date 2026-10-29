@@ -22,11 +22,11 @@ services:
 
 # -------------------------------- BACKEND
 
-  # api:
-  #   container_name: backend
-  #   build: api
-  #   networks:
-  #     - network
+  api:
+    container_name: backend
+    build: api
+    networks:
+      - network
 
 # -------------------------------- ADMINER (Manage the DB)
 
