@@ -26,7 +26,8 @@ RUN rm -rf ./*
 # Copy build (dist/)
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-RUN	mkdir /etc/nginx/ssl && \
+RUN	apk add openssl &&\
+    mkdir -p /etc/nginx/ssl && \
 	openssl req \
 		-x509 \
 		-noenc \
