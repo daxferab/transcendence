@@ -1,6 +1,6 @@
 FROM nginx
 
-RUN	mkdir /etc/nginx/ssl && \
+RUN	mkdir -p /etc/nginx/ssl && \
 	openssl req \
 		-x509 \
 		-noenc \

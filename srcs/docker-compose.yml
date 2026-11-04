@@ -1,32 +1,68 @@
 #---------------------------------- SERVICES -----------------------------------
 services:
-# -------------------------------- NGINX
-  nginx:
-    container_name: nginx
-    build: nginx
-    ports:
-      - "443:443"
-    volumes:
-      - web:/usr/share/nginx/html
-    networks:
-      - network
-
-# -------------------------------- DATABASE (PostreSQL)
 
   db:
+    image: postgres
+    build:
+      context: db/
+      dockerfile: Dockerfile
     container_name: postgres
-    build: db
-    env_file: .env
+    restart: always
+    volumes:
+      - db_volume:/var/lib/postgresql/data
     networks:
       - network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
 
-# -------------------------------- BACKEND
+  api:
+    image: api
+    build:
+      context: api/
+      dockerfile: Dockerfile
+    container_name: api
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - network
+    env_file:
+      - .env
 
-  # api:
-  #   container_name: backend
-  #   build: api
-  #   networks:
-  #     - network
+  frontend:
+    image: frontend
+    build:
+      context: frontend/
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    networks:
+      - network
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx
+    build:
+      context: nginx/
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: always
+    depends_on:
+      - api
+      - frontend
+    ports:
+      - "443:443"
+    networks:
+      - network
+    env_file:
+      - .env
 
 # -------------------------------- ADMINER (Manage the DB)
 
@@ -41,14 +77,12 @@ services:
 #----------------------------------- VOLUMES -----------------------------------
 
 volumes:
-  web:
+  db_volume:
     driver: local
     driver_opts:
-      device: $PWD/srcs/nginx/srcs
-      o: bind
       type: none
-  pgdata:
-
+      o: bind
+      device: ${DATA_PATH:?DATA_PATH is not set, run through make or export it}/postgres
 
 #---------------------------------- NETWORKS -----------------------------------
 

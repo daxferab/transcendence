@@ -1,4 +1,10 @@
 .env
-.github
-*.pdf
-features.json
+srcs/.env
+
+# Node.js dependencies & builds
+node_modules/
+dist/
+coverage/
+
+.DS_Store
+.agents/

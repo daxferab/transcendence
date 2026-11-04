@@ -1,69 +1,128 @@
 #VARIABLES
 
-.DEFAULT_GOAL := all
+DATA_PATH ?= $(HOME)/data/$(NAME)
+# The bind driver needs an absolute path, so relative values like ./data are resolved here
+override DATA_PATH := $(abspath $(DATA_PATH))
+# docker compose reads it from the environment to fill ${DATA_PATH} in the compose file
+export DATA_PATH
 
-COMPOSE_PATH := srcs/docker-compose.yml
+COMPOSE_FILE := srcs/docker-compose.yml
+DOCKER_COMPOSE := docker compose -f $(COMPOSE_FILE)
 
-#COLOURS
-
+# COLOURS
 PDEL-OLM := \033[38;5;207m
 DAXFERNA := \033[38;5;76m
 PEPALOMA := \033[38;5;55m
+CROWN    := \033[38;5;220m
+RESET    := \033[0m
 
-CROWN := \033[38;5;220m
-RESET := \033[0m
+# ==============================================================================
+# CORE TARGETS (42 Evaluation Standards)
+# ==============================================================================
 
-#RULES
+.PHONY: all dirs up down stop start restart clean fclean re status ps
 
-.PHONY: a all
-a: all
-all:
-	docker compose -f $(COMPOSE_PATH) up --build -d
+# Default target: builds images if needed and runs containers in the background
+all: dirs
+	$(DOCKER_COMPOSE) up -d --build
 	@$(MAKE) msg_credits
 
-.PHONY: u up
-u: up
-up:
-	docker compose -f $(COMPOSE_PATH) up -d
+dirs:
+	@echo "Creating data directory in $(DATA_PATH)..."
+	@mkdir -p "$(DATA_PATH)/postgres"
 
-.PHONY: d down
-d: down
+
+# Start containers in detached mode without rebuilding
+up: dirs
+	$(DOCKER_COMPOSE) up -d
+
+# Stop and remove containers and networks created by compose
 down:
-	docker compose -f $(COMPOSE_PATH) down
+	$(DOCKER_COMPOSE) down
 
-.PHONY: c clean
-c: clean
+# Stop running containers without removing them
+stop:
+	$(DOCKER_COMPOSE) stop
+
+# Start stopped containers
+start:
+	$(DOCKER_COMPOSE) start
+
+# Restart containers
+restart:
+	$(DOCKER_COMPOSE) restart
+
+# Clean: stops and removes project containers and networks
 clean:
-	-docker stop $$(docker ps -qa);
-	-docker rm $$(docker ps -qa);
-	-docker rmi -f $$(docker images -qa);
-	-docker volume rm $$(docker volume ls -q);
-	-docker network rm $$(docker network ls -q) 2> /dev/null
-	-docker system prune -af
+	$(DOCKER_COMPOSE) down --remove-orphans
 
-.PHONY: bn bash_nginx
-bn: bash_nginx
-bash_nginx:
-	docker exec -it nginx bash
+# Fclean: complete project teardown (removes containers, networks, volumes, and images)
+# Scoped strictly to this project so it won't affect other Docker projects on your machine
+fclean:
+	$(DOCKER_COMPOSE) down -v --rmi all --remove-orphans
 
-.PHONY: bp bash_postgres
-bp: bash_postgres
-bash_postgres:
-	docker exec -it postgres bash
+# Full rebuild
+re: fclean all
 
-.PHONY: ln logs_nginx
-ln: logs_nginx
-logs_nginx:
-	docker compose -f $(COMPOSE_PATH) logs nginx
+# Display status of project containers
+status ps:
+	$(DOCKER_COMPOSE) ps
 
-.PHONY: lp logs_postgres
-lp: logs_postgres
-logs_postgres:
-	docker compose -f $(COMPOSE_PATH) logs postgres
+# ==============================================================================
+# LOGS INSPECTION
+# ==============================================================================
 
-.PHONY: ps
-ps:
-	docker ps
+.PHONY: logs logs-api logs-frontend logs-nginx logs-db logs-adminer
+
+# Stream logs of all services
+logs:
+	$(DOCKER_COMPOSE) logs -f
+
+# Stream logs for individual services
+logs-api:
+	$(DOCKER_COMPOSE) logs -f api
+
+logs-frontend:
+	$(DOCKER_COMPOSE) logs -f frontend
+
+logs-nginx:
+	$(DOCKER_COMPOSE) logs -f nginx
+
+logs-db:
+	$(DOCKER_COMPOSE) logs -f db
+
+logs-adminer:
+	$(DOCKER_COMPOSE) logs -f adminer
+
+# ==============================================================================
+# INTERACTIVE SHELLS (Debugging)
+# ==============================================================================
+
+.PHONY: sh-api sh-frontend sh-nginx sh-db sh-adminer
+
+# Shell into backend (Node Alpine uses sh)
+sh-api:
+	docker exec -it api sh
+
+# Shell into frontend (Node Alpine uses sh)
+sh-frontend:
+	docker exec -it frontend sh
+
+# Shell into Nginx
+sh-nginx:
+	docker exec -it nginx sh
+
+# Shell into PostgreSQL database (Alpine uses sh)
+sh-db:
+	docker exec -it postgres sh
+
+# Shell into Adminer
+sh-adminer:
+	docker exec -it adminer sh
+
+# ==============================================================================
+# TEAM CREDITS BANNER
+# ==============================================================================
 
 .PHONY: msg_credits
 msg_credits:
