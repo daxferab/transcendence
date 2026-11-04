@@ -45,24 +45,24 @@ clean:
 r: re
 re: clean all
 
-.PHONY: bn bash_nginx
-bn: bash_nginx
-bash_nginx:
-	docker exec -it nginx bash
+.PHONY: bf bash_frontend
+bf: bash_frontend
+bash_frontend:
+	docker exec -it frontend bash
 
-.PHONY: bp bash_postgres
-bp: bash_postgres
-bash_postgres:
-	docker exec -it postgres bash
+.PHONY: bd bash_db
+bd: bash_db
+bash_db:
+	docker exec -it db bash
 
-.PHONY: ln logs_nginx
-ln: logs_nginx
-logs_nginx:
+.PHONY: lf logs_frontend
+lf: logs_frontend
+logs_frontend:
 	docker compose -f $(COMPOSE_PATH) logs nginx
 
-.PHONY: lp logs_postgres
-lp: logs_postgres
-logs_postgres:
+.PHONY: ld logs_db
+ld: logs_db
+logs_db:
 	docker compose -f $(COMPOSE_PATH) logs db
 
 .PHONY: lb logs_backend
