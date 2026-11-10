@@ -24,7 +24,12 @@ services:
 
   api:
     container_name: backend
-    build: api
+    build:
+      context: api/
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
     networks:
       - network
 
