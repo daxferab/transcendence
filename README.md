@@ -10,3 +10,6 @@
 ## Modules
 ## Individual contributions
 # Resources
+[TailwindCSS](https://tailwindcss.com/)
+[React](https://react.dev/)
+[FreeCodeCamp](https://www.freecodecamp.org/)
