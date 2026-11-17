@@ -6,9 +6,10 @@ WORKDIR /app
 # Copy packages first (cache optimization)
 COPY apps/web/package*.json ./
 
+# Update "npm"
 # Install dependencies
 # npm ci faster and better than npm install
-RUN npm ci
+RUN npm install -g && npm ci
 
 # Copy font code
 COPY apps/web/ ./
