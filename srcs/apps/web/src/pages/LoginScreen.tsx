@@ -2,11 +2,14 @@ import googleLogo from '../assets/google-logo.png'
 import githubLogo from '../assets/github-logo.png'
 import appleLogo from '../assets/apple-logo.png'
 
+import { useTranslation } from 'react-i18next'
+
 function LoginScreen() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen bg-purple-300 flex items-center justify-center">
       <div className="bg-white w-80 rounded-4xl p-8 border-3">
-        <h1 className="text-2xl text-center mb-6 font-extrabold">LOGIN</h1>
+        <h1 className="text-2xl text-center mb-6 font-extrabold">{t("login")}</h1>
         <form className="space-y-4">
           <input type="text" placeholder="email" className="w-full px-3 py-2 rounded" />
           <input type="password" placeholder="password" className="w-full px-3 py-2 rounded" />
