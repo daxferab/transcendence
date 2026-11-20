@@ -38,4 +38,4 @@ RUN	apk add openssl &&\
 
 COPY infra/nginx/conf/server.conf /etc/nginx/conf.d/server.conf
 
-EXPOSE 443
+EXPOSE 80
