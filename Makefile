@@ -34,11 +34,10 @@ down:
 .PHONY: c clean
 c: clean
 clean:
-	-docker stop $$(docker ps -qa);
-	-docker rm $$(docker ps -qa);
-	-docker rmi -f $$(docker images -qa);
-	-docker volume rm $$(docker volume ls -q);
-	-docker network rm $$(docker network ls -q) 2> /dev/null
+	-docker stop frontend backend db;
+	-docker rm frontend backend db;
+	-docker rmi -f nginx:alpine	node:24-alpine postgres:18-alpine srcs-api:latest srcs-nginx:latest;
+	-docker network rm srcs_transcendence
 	-docker system prune -af
 
 .PHONY: r re
