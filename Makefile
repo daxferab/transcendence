@@ -37,6 +37,7 @@ c: clean
 clean:
 	-docker stop frontend backend db;
 	-docker rm frontend backend db;
+	-docker volume rm srcs_pgdata;
 	-docker rmi -f nginx:alpine	node:24-alpine postgres:18-alpine srcs-api:latest srcs-nginx:latest;
 	-docker network rm srcs_transcendence
 	-docker system prune -af
