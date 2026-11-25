@@ -8,8 +8,6 @@ services:
       dockerfile: infra/nginx/Dockerfile
     ports:
        - "443:80"
-    # volumes:
-    #   - web:/usr/share/nginx/html
     networks:
       - transcendence
 
@@ -19,6 +17,8 @@ services:
     container_name: db
     image: postgres:18-alpine
     env_file: .env
+    volumes:
+      - pgdata:/var/lib/postgresql
     networks:
       - transcendence
 
@@ -31,18 +31,6 @@ services:
       dockerfile: Dockerfile
     networks:
       - transcendence
-
-#----------------------------------- VOLUMES -----------------------------------
-
-volumes:
-  # web:
-  #   driver: local
-  #   driver_opts:
-  #     device: $PWD/srcs/nginx/srcs
-  #     o: bind
-  #     type: none
-  pgdata:
-
 
 #---------------------------------- NETWORKS -----------------------------------
 
