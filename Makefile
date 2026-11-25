@@ -23,6 +23,11 @@ all:
 	docker compose -f $(COMPOSE_PATH) up --build -d
 	@$(MAKE) msg_credits
 
+.PHONY: b build
+b: build
+build:
+	docker compose -f $(COMPOSE_PATH) build
+
 .PHONY: u up
 u: up
 up:
