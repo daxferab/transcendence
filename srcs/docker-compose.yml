@@ -1,26 +1,27 @@
+name: transcendence
 #---------------------------------- SERVICES -----------------------------------
 services:
 # -------------------------------- NGINX
   nginx:
-    container_name: frontend
+    container_name: transcendence_frontend
     build:
       context: .
       dockerfile: infra/nginx/Dockerfile
     ports:
        - "443:80"
     networks:
-      - transcendence
+      - transcendence_network
 
 # -------------------------------- DATABASE (PostreSQL)
 
   db:
-    container_name: db
+    container_name: transcendence_db
     image: postgres:18-alpine
     env_file: .env
     volumes:
       - pgdata:/var/lib/postgresql
     networks:
-      - transcendence
+      - transcendence_network
     healthcheck:
         test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
         interval: 5s
@@ -31,12 +32,12 @@ services:
 # -------------------------------- BACKEND
 
   api:
-    container_name: backend
+    container_name: transcendence_backend
     build:
       context: ./apps/api
       dockerfile: Dockerfile
     networks:
-      - transcendence
+      - transcendence_network
     depends_on:
       db:
         condition: service_healthy
@@ -48,5 +49,5 @@ volumes:
 #---------------------------------- NETWORKS -----------------------------------
 
 networks:
-  transcendence:
+  transcendence_network:
     driver: bridge
