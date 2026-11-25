@@ -36,6 +36,7 @@ RUN	apk add openssl &&\
 		-out /etc/nginx/ssl/public.crt \
 		-subj "/C=/ST=/L=/O=/OU=/CN=localhost"
 
+RUN rm -f /etc/nginx/conf.d/default.conf
 COPY infra/nginx/conf/server.conf /etc/nginx/conf.d/server.conf
 
 EXPOSE 80
