@@ -21,6 +21,12 @@ services:
       - pgdata:/var/lib/postgresql
     networks:
       - transcendence
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+        interval: 5s
+        timeout: 3s
+        retries: 5
+        start_period: 10s
 
 # -------------------------------- BACKEND
 
@@ -31,6 +37,9 @@ services:
       dockerfile: Dockerfile
     networks:
       - transcendence
+    depends_on:
+      db:
+        condition: service_healthy
 
 #---------------------------------- NETWORKS -----------------------------------
 
