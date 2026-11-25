@@ -27,14 +27,8 @@ RUN rm -rf ./*
 # Copy build (dist/)
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-RUN	apk add openssl &&\
-    mkdir -p /etc/nginx/ssl && \
-	openssl req \
-		-x509 \
-		-noenc \
-		-keyout /etc/nginx/ssl/private.key \
-		-out /etc/nginx/ssl/public.crt \
-		-subj "/C=/ST=/L=/O=/OU=/CN=localhost"
+RUN   mkdir -p /etc/nginx/ssl
+COPY infra/nginx/ssl /etc/nginx/ssl
 
 RUN rm -f /etc/nginx/conf.d/default.conf
 COPY infra/nginx/conf/server.conf /etc/nginx/conf.d/server.conf
