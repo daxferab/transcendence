@@ -57,7 +57,7 @@ bash_db:
 
 .PHONY: psq
 psq:
-	docker exec -it transcendence_db psql -U $(shell grep POSTGRES_USER .env | cut -d= -f2) -d $(shell grep POSTGRES_DB .env | cut -d= -f2)
+	docker exec -it transcendence_db psql -U $(shell grep POSTGRES_USER .env | cut -d= -f2 | tr -d '"') -d $(shell grep POSTGRES_DB .env | cut -d= -f2 | tr -d '"')
 
 .PHONY: lf logs_frontend
 lf: logs_frontend
