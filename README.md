@@ -4,8 +4,10 @@
 ## Mkcert configuration
 In order for a machine to trust the local hosted server, mkcert must be installed and properly configured:
 - Install mkcert in your machine
-- Install the certificate: `mkcert -install`
-- Run `mkcert localhost 127.0.0.1` to generate the cert-key pair and move them to /srcs/infra/ssl (name them localhost+1.pem and localhost+1-key.pem in case they are not)
+- Run `make mkcert` or:
+	- Install the certificate: `mkcert -install`
+	- Run `mkcert localhost 127.0.0.1` to generate the cert-key pair
+	- Move the pair to /srcs/infra/ssl (name them localhost+1.pem and localhost+1-key.pem in case they are not)
 ## Configure .env file
 Create a .env file in /srcs with the same variables as .env.example (or change .env.example file name to .env)
 # Project

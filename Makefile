@@ -48,12 +48,12 @@ re: clean all
 .PHONY: bf bash_frontend
 bf: bash_frontend
 bash_frontend:
-	docker exec -it frontend bash
+	docker exec -it frontend sh
 
 .PHONY: bd bash_db
 bd: bash_db
 bash_db:
-	docker exec -it db bash
+	docker exec -it db sh
 
 .PHONY: lf logs_frontend
 lf: logs_frontend
@@ -73,6 +73,13 @@ logs_backend:
 .PHONY: ps
 ps:
 	docker ps
+
+.PHONY: mkcert
+mkcert:
+	mkdir -p srcs/infra/nginx/ssl
+	mkcert -install
+	mkcert localhost 127.0.0.1
+	mv localhost+1-key.pem localhost+1.pem srcs/infra/nginx/ssl
 
 .PHONY: msg_credits
 msg_credits:
