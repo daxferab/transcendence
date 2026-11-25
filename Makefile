@@ -81,7 +81,7 @@ logs_backend:
 
 .PHONY: ps
 ps:
-	docker ps --filter "name=transcendence"
+	docker compose -f $(COMPOSE_PATH) ps
 
 .PHONY: msg_credits
 msg_credits:
