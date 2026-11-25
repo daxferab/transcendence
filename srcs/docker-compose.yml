@@ -11,6 +11,7 @@ services:
        - "443:80"
     networks:
       - transcendence_network
+    logging: *default-logging
 
 # -------------------------------- DATABASE (PostreSQL)
 
@@ -28,6 +29,7 @@ services:
         timeout: 3s
         retries: 5
         start_period: 10s
+    logging: *default-logging
 
 # -------------------------------- BACKEND
 
@@ -41,6 +43,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    logging: *default-logging
 
 #---------------------------------- VOLUMES -----------------------------------
 volumes:
@@ -51,3 +54,10 @@ volumes:
 networks:
   transcendence_network:
     driver: bridge
+
+# Limit space and amount of log files
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
