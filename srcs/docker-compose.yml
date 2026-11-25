@@ -1,4 +1,12 @@
 name: transcendence
+
+# Limit space and amount of log files
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 #---------------------------------- SERVICES -----------------------------------
 services:
 # -------------------------------- NGINX
@@ -54,10 +62,3 @@ volumes:
 networks:
   transcendence_network:
     driver: bridge
-
-# Limit space and amount of log files
-x-logging: &default-logging
-  driver: json-file
-  options:
-    max-size: "10m"
-    max-file: "3"
