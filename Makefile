@@ -35,11 +35,10 @@ down:
 .PHONY: c clean
 c: clean
 clean:
-	-docker stop frontend backend db;
-	-docker rm frontend backend db;
-	-docker rmi -f nginx:alpine	node:24-alpine postgres:18-alpine srcs-api:latest srcs-nginx:latest;
-	-docker network rm srcs_transcendence
-	-docker system prune -af
+	-docker compose -f $(COMPOSE_PATH) down -v --remove-orphans
+	-docker volume rm $(PROJECT_NAME)_pgdata 2>/dev/null
+	-docker network rm $(PROJECT_NAME)_transcendence_net 2>/dev/null
+	-docker rmi -f $(PROJECT_NAME)-api:latest $(PROJECT_NAME)-nginx:latest 2>/dev/null
 
 .PHONY: r re
 r: re
@@ -48,12 +47,16 @@ re: clean all
 .PHONY: bf bash_frontend
 bf: bash_frontend
 bash_frontend:
-	docker exec -it frontend sh
+	docker exec -it transcendence_frontend bash
 
 .PHONY: bd bash_db
 bd: bash_db
 bash_db:
-	docker exec -it db sh
+	docker exec -it transcendence_db bash
+
+.PHONY: psq
+psq:
+	docker exec -it transcendence_db psql -U $(shell grep POSTGRES_USER .env | cut -d= -f2 | tr -d '"') -d $(shell grep POSTGRES_DB .env | cut -d= -f2 | tr -d '"')
 
 .PHONY: lf logs_frontend
 lf: logs_frontend
