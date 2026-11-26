@@ -3,6 +3,7 @@
 .DEFAULT_GOAL := all
 
 COMPOSE_PATH := srcs/docker-compose.yml
+PROJECT_NAME := transcendence
 
 #COLOURS
 
@@ -21,6 +22,11 @@ a: all
 all:
 	docker compose -f $(COMPOSE_PATH) up --build -d
 	@$(MAKE) msg_credits
+
+.PHONY: b build
+b: build
+build:
+	docker compose -f $(COMPOSE_PATH) build
 
 .PHONY: u up
 u: up
