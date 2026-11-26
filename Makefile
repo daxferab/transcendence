@@ -83,6 +83,13 @@ logs_backend:
 ps:
 	docker compose -f $(COMPOSE_PATH) ps
 
+.PHONY: mkcert
+mkcert:
+	mkdir -p srcs/infra/nginx/ssl
+	mkcert -install
+	mkcert localhost 127.0.0.1
+	mv localhost+1-key.pem localhost+1.pem srcs/infra/nginx/ssl
+
 .PHONY: msg_credits
 msg_credits:
 	@echo "$(CROWN)\n\
