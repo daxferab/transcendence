@@ -1,8 +1,9 @@
 export default {
   en: {
     translation: {
-      "dashboard.title": "Dashboard",
-      "login": "Login",
+      "app.name": "focustrack",
+      "dashboard.title": "dashboard",
+      "login": "login",
     },
   },
 };
