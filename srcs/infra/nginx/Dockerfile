@@ -1,18 +1,25 @@
+# Docker context srcs/
 # ------------------------------------ Node image for React app
 FROM node:24-alpine AS builder
 
 WORKDIR /app
 
+
 # Copy packages first (cache optimization)
-COPY apps/web/package*.json ./
+COPY package*.json ./
+COPY apps/web/package*.json ./apps/web/
+#uncomment once packages/shared exists:
+#	COPY packages/shared/package*.json ./packages/shared/
 
 # Update "npm"
 # Install dependencies
-# npm ci faster and better than npm install
-RUN npm install -g && npm ci
+# npm ci faster and better than npm instal
+RUN npm ci -w web
 
 # Copy font code
-COPY apps/web/ ./
+COPY apps/web/ ./apps/web/
+#uncomment once packages/shared exists:
+#	COPY packages/shared/ ./packages/shared/
 
 # Build React app (Translates JSX to plain html/css/js into dist/)
 RUN npm run build
@@ -25,7 +32,7 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 
 # Copy build (dist/)
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
 RUN   mkdir -p /etc/nginx/ssl
 COPY infra/nginx/ssl /etc/nginx/ssl
