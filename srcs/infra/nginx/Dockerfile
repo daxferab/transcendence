@@ -13,8 +13,8 @@ COPY apps/web/package*.json ./apps/web/
 
 # Update "npm"
 # Install dependencies
-# npm ci faster and better than npm install
-RUN npm install -g && npm ci
+# npm ci faster and better than npm instal
+RUN npm ci -w web
 
 # Copy font code
 COPY apps/web/ ./apps/web/
