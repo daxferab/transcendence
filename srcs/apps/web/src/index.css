@@ -1,1 +1,20 @@
 @import "tailwindcss";
+
+@theme {
+    /* Colors */
+    --color-primary-200: #1A1C1B; /* Black. Background, some buttons and main texts*/
+    --color-primary-100: #3B3635; /* Dark gray. Less important texts */
+
+    --color-secondary: #DBD8D3; /* White. Cards */
+
+    --color-placeholder: #C0BBB7; /* Light gray. Placeholder */
+    
+    --color-accent-500: #FC6607; /* Orange. Accent */
+    --color-accent-400: #FF7D2B;
+    --color-accent-300: #FF9653;
+    --color-accent-200: #FFA66E;
+    --color-accent-100: #FFB688;
+
+    /* Typography */
+    --font-mono: "Google sans code", monospace;
+}
